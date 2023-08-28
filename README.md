@@ -1,6 +1,6 @@
 # Merge config orb
 
-This orb is based on the path-filtering-orb [orb](https://github.com/CircleCI-Public/path-filtering-orb), it provide a job which merge circleCI configs and filter by changes in order to trigger the right circleci workflow.
+This orb is based on the path-filtering-orb [orb](https://github.com/CircleCI-Public/path-filtering-orb). The orb  allow to merge other configuration files present in the project and also trigger the right workflow if there have been changes between the base revision and the current branch.
 
 ## Usage
 
