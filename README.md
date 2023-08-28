@@ -1,23 +1,34 @@
-# Orb Project Template
-<!---
-[![CircleCI Build Status](https://circleci.com/gh/<organization>/<project-name>.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/<organization>/<project-name>) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/<namespace>/<orb-name>)](https://circleci.com/orbs/registry/orb/<namespace>/<orb-name>) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/<organization>/<project-name>/main/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
+# Merge config orb
 
---->
+This orb is based on the path-filtering-orb [orb](https://github.com/CircleCI-Public/path-filtering-orb), it provide a job which merge circleCI configs and filter by changes in order to trigger the right one.
 
-A starter template for orb projects. Build, test, and publish orbs automatically on CircleCI with [Orb-Tools](https://circleci.com/orbs/registry/orb/circleci/orb-tools).
+## Usage
 
-Additional READMEs are available in each directory.
+In a `.circleci/config.yaml` located at the root of the project:
 
-**Meta**: This repository is open for contributions! Feel free to open a pull request with your changes. Due to the nature of this repository, it is not built on CircleCI. The Resources and How to Contribute sections relate to an orb created with this template, rather than the template itself.
+Import the orb
+```
+orbs:
+  multiple-configs: swile/merge-configs@0.1.0
+```
 
-## Resources
+Use it in a job
+```
+workflows:
+  trigger-workflow:
+    jobs:
+      - multiple-configs/merge:
+          name: Filter by Folder Modifications
+          base-revision: master
+          mapping: |
+            node/.* node/.circleci/config.yaml
+            ruby/.* ruby/.circleci/config.yaml
+```
 
-[CircleCI Orb Registry Page](https://circleci.com/orbs/registry/orb/<namespace>/<project-name>) - The official registry page of this orb for all versions, executors, commands, and jobs described.
-[CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using and creating CircleCI Orbs.
+- `base-revision`: the branch which will be compared with the current branch
+- `mapping`: the path of each folders with its own `config.yaml`, you can also merge more than 1 file in each line (e.g: `.* node/.circleci/config.yaml ruby/.circleci/config.yaml`)
 
-### How to Contribute
-
-We welcome [issues](https://github.com/<organization>/<project-name>/issues) to and [pull requests](https://github.com/<organization>/<project-name>/pulls) against this repository!
+This configuration will compare the diff between master and trigger workflows related to the current diff.
 
 ### How to Publish
 * Create and push a branch with your new features.
@@ -35,7 +46,3 @@ Example: `[semver:major]`
 
 * Squash and merge. Ensure the semver tag is preserved and entered as a part of the commit message.
 * On merge, after manual approval, the orb will automatically be published to the Orb Registry.
-
-
-For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).
-
